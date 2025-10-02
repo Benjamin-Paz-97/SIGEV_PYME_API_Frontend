@@ -5,7 +5,11 @@ const isDev = import.meta.env.DEV;
 const API_BASE_URL = isDev 
   ? '/' // usar proxy de Vite en desarrollo
   : (import.meta.env.VITE_API_BASE_URL || 'https://sigev-pyme-webapi.onrender.com');
-const API_TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT || '10000');
+
+console.log('Environment:', isDev ? 'Development' : 'Production');
+console.log('API Base URL:', API_BASE_URL);
+
+const API_TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT || '15000');
 
 // Crear instancia de Axios con configuración base
 export const apiClient = axios.create({
@@ -25,10 +29,27 @@ apiClient.interceptors.request.use(
     const token = localStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('Request con token:', config.method?.toUpperCase(), config.url);
+    } else {
+      console.log('Request sin token:', config.method?.toUpperCase(), config.url);
     }
+    
+    // Log completo del request en producción para debugging
+    if (!isDev) {
+      console.log('Request config:', {
+        method: config.method,
+        url: config.url,
+        baseURL: config.baseURL,
+        fullURL: `${config.baseURL}${config.url}`,
+        headers: config.headers,
+        data: config.data
+      });
+    }
+    
     return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -36,10 +57,21 @@ apiClient.interceptors.request.use(
 // Interceptor para responses
 apiClient.interceptors.response.use(
   (response) => {
+    console.log('Response exitoso:', response.config.method?.toUpperCase(), response.config.url, response.status);
     return response;
   },
   (error) => {
-    console.log('API Error:', error.response?.status, error.response?.data);
+    console.error('API Error:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      url: error.config?.url,
+      method: error.config?.method,
+      baseURL: error.config?.baseURL,
+      fullURL: `${error.config?.baseURL}${error.config?.url}`,
+      data: error.response?.data,
+      message: error.message,
+      code: error.code
+    });
     
     // Solo hacer logout automático si es realmente un error de autenticación
     // y no estamos en el proceso de login/registro
