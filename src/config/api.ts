@@ -39,10 +39,22 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Manejar errores de autenticación
+    console.log('API Error:', error.response?.status, error.response?.data);
+    
+    // Solo hacer logout automático si es realmente un error de autenticación
+    // y no estamos en el proceso de login/registro
     if (error.response?.status === 401) {
-      localStorage.removeItem('authToken');
-      window.location.href = '/login';
+      const url = error.config?.url || '';
+      const isAuthEndpoint = url.includes('/login') || url.includes('/register') || url.includes('/me');
+      
+      if (!isAuthEndpoint) {
+        console.log('Token inválido, haciendo logout...');
+        localStorage.removeItem('authToken');
+        // Solo redirigir si no estamos ya en login
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+      }
     }
     return Promise.reject(error);
   }

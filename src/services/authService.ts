@@ -99,10 +99,17 @@ export interface Sale {
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
+      console.log('Iniciando login con:', credentials.email);
       const response = await apiClient.post(apiEndpoints.login, credentials);
       const data: AuthResponse = response.data;
+      console.log('Respuesta del login:', data);
+      
       if (data?.token) {
+        console.log('Token recibido, guardando en localStorage...');
         localStorage.setItem('authToken', data.token);
+        console.log('Token guardado exitosamente');
+      } else {
+        console.warn('No se recibió token en la respuesta');
       }
       return data;
     } catch (error: any) {
@@ -150,7 +157,12 @@ export const authService = {
   },
 
   async getCurrentUser(): Promise<User> {
+    console.log('Obteniendo datos del usuario actual...');
+    const token = this.getAuthToken();
+    console.log('Token actual:', token ? 'Presente' : 'No presente');
+    
     const response = await apiClient.get(apiEndpoints.me);
+    console.log('Datos del usuario obtenidos:', response.data);
     return response.data;
   }
 };
