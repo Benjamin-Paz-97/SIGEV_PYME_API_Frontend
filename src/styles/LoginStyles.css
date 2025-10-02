@@ -299,19 +299,152 @@
 }
 
 /* Responsive */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+  .login-container {
+    padding: 20px 10px;
+  }
+
+  .login-form-container {
+    width: 100%;
+    max-width: 500px;
+  }
+
   .login-form {
-    width: 92%;
+    width: 100%;
     height: auto;
     min-height: unset;
-    padding: 16px;
+    padding: 30px 20px;
   }
-  
+
+  .login-logo-container {
+    margin-bottom: 25px;
+  }
+
+  .login-logo-image {
+    width: 110px;
+  }
+
+  .login-app-name {
+    font-size: 1.6rem;
+  }
+
+  .login-form-fields {
+    gap: 16px;
+  }
+
+  .login-field {
+    margin-bottom: 16px;
+  }
+
+  .login-input {
+    padding: 14px 50px 14px 45px;
+    font-size: 16px; /* Evita zoom en iOS */
+  }
+
+  .login-input-icon {
+    left: 15px;
+    font-size: 18px;
+  }
+
+  .password-toggle {
+    right: 15px;
+    font-size: 18px;
+  }
+
+  .login-button {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  .login-register-container {
+    margin-top: 20px;
+  }
+
+  .login-register-text {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 15px 5px;
+  }
+
+  .login-form-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .login-form {
+    width: 100%;
+    height: auto;
+    min-height: unset;
+    padding: 20px 15px;
+    border-radius: 12px;
+  }
+
+  .login-logo-container {
+    margin-bottom: 20px;
+  }
+
+  .login-logo-image {
+    width: 100px;
+  }
+
   .login-app-name {
     font-size: 1.3rem;
   }
-  
-  .login-logo-image {
-    width: 100px;
+
+  .login-form-fields {
+    gap: 14px;
+  }
+
+  .login-field {
+    margin-bottom: 14px;
+  }
+
+  .login-input {
+    padding: 12px 45px 12px 40px;
+    font-size: 16px; /* Evita zoom en iOS */
+  }
+
+  .login-input-icon {
+    left: 12px;
+    font-size: 16px;
+  }
+
+  .password-toggle {
+    right: 12px;
+    font-size: 16px;
+  }
+
+  .login-button {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .login-register-container {
+    margin-top: 18px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .login-register-text {
+    font-size: 13px;
+  }
+
+  .login-button-register {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* Ocultar algunos elementos en pantallas muy pequeñas */
+  .login-forgot-password {
+    font-size: 12px;
+  }
+
+  .login-button-google {
+    padding: 12px;
+    font-size: 14px;
   }
 }
