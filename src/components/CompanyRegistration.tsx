@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { companyService } from '../services/authService';
+import { companyService, authService } from '../services/authService';
 import { useAuth } from '../hooks/useAuth';
 import '../styles/CompanyRegistrationStyles.css';
 
@@ -9,7 +9,7 @@ interface CompanyRegistrationProps {
 }
 
 const CompanyRegistration: React.FC<CompanyRegistrationProps> = ({ onSuccess, onCancel }) => {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [formData, setFormData] = useState({
     nombre: '',
     correo: '',
@@ -86,7 +86,24 @@ const CompanyRegistration: React.FC<CompanyRegistrationProps> = ({ onSuccess, on
         gerenteId: user.id
       };
       
-      await companyService.create(payload);
+      const createdCompany = await companyService.create(payload);
+      console.log('Empresa creada:', createdCompany);
+      
+      // Actualizar el usuario con el companyId de la empresa creada
+      await authService.updateUser({
+        id: user.id,
+        userName: user.userName,
+        email: user.email,
+        telefono: user.telefono,
+        direccion: user.direccion,
+        role: user.role,
+        estado: user.estado,
+        companyId: createdCompany.id
+      });
+      
+      // Refrescar los datos del usuario para obtener el companyId actualizado
+      await refreshUser();
+      
       onSuccess();
     } catch (error: any) {
       console.error('Error creando empresa:', error);

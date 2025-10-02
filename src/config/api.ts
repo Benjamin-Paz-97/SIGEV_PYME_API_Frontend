@@ -67,6 +67,7 @@ export const apiEndpoints = {
   register: '/api/Auth/user/register',
   logout: '/api/Auth/user/logout',
   me: '/api/Auth/user/me',
+  updateUser: '/api/Auth/user/update',
   
   // Empresas
   companies: '/api/Company',

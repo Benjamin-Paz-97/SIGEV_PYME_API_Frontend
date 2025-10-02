@@ -164,6 +164,13 @@ export const authService = {
     const response = await apiClient.get(apiEndpoints.me);
     console.log('Datos del usuario obtenidos:', response.data);
     return response.data;
+  },
+
+  async updateUser(userData: Partial<User>): Promise<User> {
+    console.log('Actualizando datos del usuario:', userData);
+    const response = await apiClient.put(apiEndpoints.updateUser, userData);
+    console.log('Usuario actualizado:', response.data);
+    return response.data;
   }
 };
 
