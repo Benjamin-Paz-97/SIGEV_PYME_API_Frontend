@@ -7,6 +7,8 @@ const Inventario: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -129,6 +131,73 @@ const Inventario: React.FC = () => {
     });
     setErrors({});
     setIsModalOpen(false);
+    setIsEditMode(false);
+    setEditingProduct(null);
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setIsEditMode(true);
+    setFormData({
+      name: product.name,
+      description: product.description,
+      stock: product.stock,
+      price: product.price
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+      return;
+    }
+
+    try {
+      await productService.delete(productId);
+      setProducts(prev => prev.filter(p => p.id !== productId));
+      alert('Producto eliminado exitosamente');
+    } catch (error: any) {
+      console.error('Error deleting product:', error);
+      alert('No se pudo eliminar el producto. Verifica la conexión.');
+    }
+  };
+
+  const handleUpdateProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm() || !editingProduct) {
+      return;
+    }
+
+    try {
+      const updatedProduct = await productService.update(editingProduct.id, {
+        name: formData.name,
+        description: formData.description,
+        stock: formData.stock,
+        price: formData.price
+      });
+      
+      // Actualizar el producto en la lista local
+      setProducts(prev => prev.map(p => p.id === editingProduct.id ? updatedProduct : p));
+      
+      // Resetear formulario
+      setFormData({
+        name: '',
+        description: '',
+        stock: 0,
+        price: 0
+      });
+      setErrors({});
+      setIsModalOpen(false);
+      setIsEditMode(false);
+      setEditingProduct(null);
+      
+      alert('Producto actualizado exitosamente');
+      
+    } catch (error: any) {
+      console.error('Error updating product:', error);
+      alert('No se pudo actualizar el producto. Verifica la conexión y los datos.');
+    }
   };
 
   if (isLoading) {
@@ -207,8 +276,18 @@ const Inventario: React.FC = () => {
                       </div>
                     </div>
                     <div className="product-actions">
-                      <button className="action-button edit">Editar</button>
-                      <button className="action-button delete">Eliminar</button>
+                      <button 
+                        className="action-button edit"
+                        onClick={() => handleEditProduct(product)}
+                      >
+                        Editar
+                      </button>
+                      <button 
+                        className="action-button delete"
+                        onClick={() => handleDeleteProduct(product.id)}
+                      >
+                        Eliminar
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -223,13 +302,15 @@ const Inventario: React.FC = () => {
         <div className="modal-overlay" onClick={handleClose}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2 className="modal-title">Agregar Nuevo Producto</h2>
+              <h2 className="modal-title">
+                {isEditMode ? 'Editar Producto' : 'Agregar Nuevo Producto'}
+              </h2>
               <button className="modal-close" onClick={handleClose}>
                 <span className="close-icon">×</span>
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="modal-form">
+            <form onSubmit={isEditMode ? handleUpdateProduct : handleSubmit} className="modal-form">
               <div className="form-group">
                 <label htmlFor="name" className="form-label">
                   Nombre del Producto *
@@ -313,7 +394,7 @@ const Inventario: React.FC = () => {
                 </button>
                 <button type="submit" className="save-button">
                   <span className="button-icon">💾</span>
-                  Guardar Producto
+                  {isEditMode ? 'Actualizar Producto' : 'Guardar Producto'}
                 </button>
               </div>
             </form>
