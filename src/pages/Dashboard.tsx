@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
                     <div className="plan-header">
                       <h4 className="plan-name">PREMIUM PRO</h4>
                       <div className="plan-price">
-                        <span className="price-amount">S/. 59</span>
+                        <span className="price-amount">S/. 29</span>
                         <span className="price-period">/mes</span>
                       </div>
                     </div>
@@ -59,7 +59,7 @@ const Dashboard: React.FC = () => {
                     <div className="plan-header">
                       <h4 className="plan-name">PREMIUM ULTRA</h4>
                       <div className="plan-price">
-                        <span className="price-amount">S/. 99</span>
+                        <span className="price-amount">S/. 49</span>
                         <span className="price-period">/mes</span>
                       </div>
                     </div>
