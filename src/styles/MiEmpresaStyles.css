@@ -31,6 +31,47 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
+/* Acciones de cabecera (Editar / Eliminar) */
+.company-header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.company-action {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.company-action:hover {
+  background: #f9fafb;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.company-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.company-action.danger {
+  border-color: #fde2e2;
+  color: #b91c1c;
+  background: #fff;
+}
+
+.company-action.danger:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
 .company-logo-circle {
   width: 80px;
   height: 80px;

@@ -18,6 +18,17 @@ const MiEmpresa: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showRegistration, setShowRegistration] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [editData, setEditData] = useState({
+    nombre: '',
+    correo: '',
+    telefono: '',
+    pais: '',
+    numeroEmpleados: 0,
+    direccion: '',
+    ruc: ''
+  });
 
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -98,9 +109,18 @@ const MiEmpresa: React.FC = () => {
       await companyService.delete(company.id);
       console.log('Empresa eliminada. Actualizando usuario para limpiar companyId...');
 
-      // Limpiar companyId del usuario
+      // Limpiar companyId del usuario (API requiere payload completo)
       const currentUser = user || (await userService.getCurrentUser());
-      await authService.updateUser({ id: currentUser.id, companyId: null });
+      await authService.updateUser({
+        id: currentUser.id,
+        userName: currentUser.userName,
+        email: currentUser.email,
+        telefono: currentUser.telefono ?? '',
+        direccion: currentUser.direccion ?? '',
+        role: currentUser.role,
+        estado: currentUser.estado,
+        companyId: null
+      } as any);
       await refreshUser();
 
       // Limpiar estados locales y mostrar registro
@@ -109,11 +129,57 @@ const MiEmpresa: React.FC = () => {
       setSales([]);
       setShowRegistration(true);
       alert('Empresa eliminada correctamente. Puedes registrar una nueva empresa.');
+      // Refrescar la vista tras eliminar
+      window.location.reload();
     } catch (e: any) {
       console.error('Error eliminando empresa:', e);
       alert(e?.message || 'No se pudo eliminar la empresa.');
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const openEditCompany = () => {
+    if (!company) return;
+    setEditData({
+      nombre: company.nombre || '',
+      correo: company.correo || '',
+      telefono: company.telefono || '',
+      pais: company.pais || '',
+      numeroEmpleados: company.numeroEmpleados || 0,
+      direccion: company.direccion || '',
+      ruc: company.ruc || ''
+    });
+    setIsEditOpen(true);
+  };
+
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEditData(prev => ({
+      ...prev,
+      [name]: name === 'numeroEmpleados' ? Number(value) : value
+    }));
+  };
+
+  const handleUpdateCompany = async () => {
+    if (!company?.id) return;
+    try {
+      setIsUpdating(true);
+      console.log('Actualizando empresa:', { id: company.id, ...editData, gerenteId: user?.id });
+      const updated = await companyService.update(company.id, {
+        ...editData,
+        gerenteId: user?.id || company.gerenteId
+      } as any);
+      setCompany(updated);
+      setIsEditOpen(false);
+      alert('Empresa actualizada correctamente');
+      // Recargar para reflejar cambios
+      window.location.reload();
+    } catch (e: any) {
+      console.error('Error actualizando empresa:', e);
+      alert(e?.message || 'No se pudo actualizar la empresa.');
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -205,6 +271,7 @@ const MiEmpresa: React.FC = () => {
   console.log('Mostrando contenido principal de la empresa');
 
   return (
+    <>
     <div className="mi-empresa-container">
       <div className="mi-empresa-content">
         {/* Información de la Empresa */}
@@ -220,6 +287,14 @@ const MiEmpresa: React.FC = () => {
                 <span className="meta-item">📅 Registrada: {company.createdAt ? new Date(company.createdAt).toLocaleDateString() : 'N/A'}</span>
                 <span className="meta-item">🔄 Actualizada: {company.updatedAt ? new Date(company.updatedAt).toLocaleDateString() : 'N/A'}</span>
               </div>
+            </div>
+            <div className="company-header-actions">
+              <button onClick={openEditCompany} className="company-action">
+                ✏️ Editar Empresa
+              </button>
+              <button onClick={handleDeleteCompany} disabled={isDeleting} className="company-action danger">
+                🗑️ {isDeleting ? 'Eliminando...' : 'Eliminar'}
+              </button>
             </div>
           </div>
 
@@ -339,6 +414,32 @@ const MiEmpresa: React.FC = () => {
         </div>
       </div>
     </div>
+
+    {/* Modal de edición de empresa */}
+    {isEditOpen && (
+      <div className="modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+        <div className="sale-detail-modal" style={{ background: '#fff', borderRadius: 12, width: 'min(640px, 92vw)', padding: 20 }}>
+          <div className="modal-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+            <h3 className="modal-title" style={{ margin: 0 }}>Editar Empresa</h3>
+            <button className="modal-close" onClick={() => setIsEditOpen(false)} style={{ border: 'none', background: 'transparent', fontSize: 20, cursor: 'pointer' }}>×</button>
+          </div>
+          <div className="modal-content" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>Nombre<input name="nombre" value={editData.nombre} onChange={handleEditChange} /></label>
+            <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>Correo<input name="correo" value={editData.correo} onChange={handleEditChange} /></label>
+            <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>Teléfono<input name="telefono" value={editData.telefono} onChange={handleEditChange} /></label>
+            <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>País<input name="pais" value={editData.pais} onChange={handleEditChange} /></label>
+            <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>Empleados<input type="number" name="numeroEmpleados" value={editData.numeroEmpleados} onChange={handleEditChange} /></label>
+            <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>Dirección<input name="direccion" value={editData.direccion} onChange={handleEditChange} /></label>
+            <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>RUC<input name="ruc" value={editData.ruc} onChange={handleEditChange} /></label>
+          </div>
+          <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 16 }}>
+            <button className="close-button" onClick={() => setIsEditOpen(false)} disabled={isUpdating}>Cancelar</button>
+            <button className="delete-button" onClick={handleUpdateCompany} disabled={isUpdating}>{isUpdating ? 'Guardando...' : 'Guardar'}</button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 };
 
