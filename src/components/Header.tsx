@@ -14,6 +14,11 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
   const { isAuthenticated, user } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
+  // Debug logs
+  console.log('Header - isAuthenticated:', isAuthenticated);
+  console.log('Header - user:', user);
+  console.log('Header - isUserMenuOpen:', isUserMenuOpen);
+
   const handleLogoClick = () => {
     if (isAuthenticated) {
       // Si ya estamos en dashboard, recargar la página
