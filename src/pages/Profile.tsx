@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { userService, type MeResponse } from '../services/authService';
+import { userService, type User } from '../services/authService';
 import '../styles/ProfileStyles.css';
 
 const Profile: React.FC = () => {
-  const [user, setUser] = useState<MeResponse | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 

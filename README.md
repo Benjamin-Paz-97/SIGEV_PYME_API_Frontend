@@ -1,69 +1,51 @@
-# React + TypeScript + Vite
+# SIGEV-PYME Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema de Gestión Empresarial para PYMEs - Frontend
 
-Currently, two official plugins are available:
+## 🚀 Despliegue en Render.com
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Configuración de Build:
+- **Build Command**: `npm install && npm run build`
+- **Publish Directory**: `dist`
+- **Node Version**: `18`
 
-## Expanding the ESLint configuration
+### Variables de Entorno:
+- `VITE_API_BASE_URL`: `https://sigev-pyme-webapi.onrender.com`
+- `VITE_API_TIMEOUT`: `10000`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Funcionalidades:
+- ✅ Sistema de autenticación (Login/Registro)
+- ✅ Dashboard empresarial con ganancias mensuales
+- ✅ Gestión de inventario de productos
+- ✅ Sistema de ventas completo
+- ✅ Modal de detalles mejorado
+- ✅ Gráficos de barras para análisis
+- ✅ Gestión de empresas
+- ✅ Interfaz responsive y moderna
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Tecnologías:
+- React 19 + TypeScript
+- Vite (Build Tool)
+- Axios (HTTP Client)
+- CSS Modules
+- React Router DOM
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### API Backend:
+- URL: https://sigev-pyme-webapi.onrender.com
+- Endpoints: Auth, Company, Product, Sale
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Desarrollo Local:
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Build para Producción:
+```bash
+npm run build
+```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Preview Local:
+```bash
+npm run preview
 ```

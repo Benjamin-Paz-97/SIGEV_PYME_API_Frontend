@@ -1,0 +1,33 @@
+# Render.com Configuration
+
+## Build Settings
+- **Build Command**: `npm install && npm run build`
+- **Publish Directory**: `dist`
+- **Node Version**: `18`
+
+## Environment Variables
+Set these in Render dashboard:
+
+```
+VITE_API_BASE_URL=https://sigev-pyme-webapi.onrender.com
+VITE_API_TIMEOUT=10000
+```
+
+## Build Process
+1. Install dependencies: `npm install`
+2. TypeScript compilation: `tsc -b`
+3. Vite build: `vite build`
+4. Output: `dist/` directory
+
+## Optimization Features
+- ✅ Code splitting (vendor, router, http chunks)
+- ✅ Minification with Terser
+- ✅ No source maps (smaller bundle)
+- ✅ Tree shaking enabled
+- ✅ Asset optimization
+
+## Static Site Configuration
+- **Type**: Static Site
+- **Framework**: Vite
+- **Build Output**: `dist/`
+- **Auto Deploy**: On git push to main branch

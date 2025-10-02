@@ -64,6 +64,10 @@ export const apiEndpoints = {
   products: '/api/Product',
   productById: (id: string) => `/api/Product/${id}`,
   
+  // Inventario (usando productos como base)
+  inventory: '/api/Product',
+  inventoryById: (id: string) => `/api/Product/${id}`,
+  
   // Ventas
   sales: '/api/Sale',
   salesMine: '/api/Sale/mine',
