@@ -136,6 +136,7 @@ const Inventario: React.FC = () => {
   };
 
   const handleEditProduct = (product: Product) => {
+    console.log('Editando producto:', product);
     setEditingProduct(product);
     setIsEditMode(true);
     setFormData({
@@ -148,34 +149,48 @@ const Inventario: React.FC = () => {
   };
 
   const handleDeleteProduct = async (productId: string) => {
+    console.log('Eliminando producto con ID:', productId);
+    
     if (!window.confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+      console.log('Usuario canceló la eliminación');
       return;
     }
 
     try {
+      console.log('Enviando petición DELETE para producto:', productId);
       await productService.delete(productId);
+      console.log('Producto eliminado exitosamente');
       setProducts(prev => prev.filter(p => p.id !== productId));
       alert('Producto eliminado exitosamente');
     } catch (error: any) {
       console.error('Error deleting product:', error);
-      alert('No se pudo eliminar el producto. Verifica la conexión.');
+      console.error('Error response:', error.response);
+      console.error('Error status:', error.response?.status);
+      alert(`No se pudo eliminar el producto. Error: ${error.message || 'Error desconocido'}`);
     }
   };
 
   const handleUpdateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('Actualizando producto:', editingProduct);
+    console.log('Datos del formulario:', formData);
+    
     if (!validateForm() || !editingProduct) {
+      console.log('Validación falló o no hay producto editando');
       return;
     }
 
     try {
+      console.log('Enviando petición PUT para producto:', editingProduct.id);
       const updatedProduct = await productService.update(editingProduct.id, {
         name: formData.name,
         description: formData.description,
         stock: formData.stock,
         price: formData.price
       });
+      
+      console.log('Producto actualizado exitosamente:', updatedProduct);
       
       // Actualizar el producto en la lista local
       setProducts(prev => prev.map(p => p.id === editingProduct.id ? updatedProduct : p));
@@ -196,7 +211,9 @@ const Inventario: React.FC = () => {
       
     } catch (error: any) {
       console.error('Error updating product:', error);
-      alert('No se pudo actualizar el producto. Verifica la conexión y los datos.');
+      console.error('Error response:', error.response);
+      console.error('Error status:', error.response?.status);
+      alert(`No se pudo actualizar el producto. Error: ${error.message || 'Error desconocido'}`);
     }
   };
 
