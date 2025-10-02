@@ -132,7 +132,7 @@
   .footer-content {
     grid-template-columns: 1fr;
     padding: 2rem 1rem 1rem;
-    gap: 1.5rem;
+    gap: 2rem;
   }
   
   .footer-section {
@@ -140,49 +140,100 @@
   }
   
   .footer-title {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
   }
   
   .footer-subtitle {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+    color: #3b82f6;
+    font-weight: 700;
   }
   
   .footer-description {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    max-width: 300px;
+    margin: 0 auto;
   }
   
   .footer-links {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.75rem;
   }
   
   .footer-links li {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0;
+  }
+  
+  .footer-link {
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+  }
+  
+  .footer-link:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
+    transform: translateY(-2px);
+  }
+  
+  .footer-bottom {
+    padding: 1.5rem 1rem;
+    border-top: 2px solid rgba(59, 130, 246, 0.2);
+  }
+  
+  .footer-copyright {
+    font-size: 0.85rem;
+    color: #9ca3af;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  }
+  
+  .footer-content {
+    padding: 1.5rem 0.75rem 1rem;
+    gap: 1.5rem;
+  }
+  
+  .footer-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .footer-subtitle {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .footer-description {
+    font-size: 0.9rem;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  
+  .footer-links {
+    gap: 0.5rem;
   }
   
   .footer-link {
     font-size: 0.9rem;
-  }
-  
-  .footer-contact {
-    align-items: center;
-  }
-  
-  .contact-button {
-    justify-content: center;
-    padding: 0.75rem;
-    font-size: 0.9rem;
-  }
-  
-  .contact-item {
-    justify-content: center;
-    padding: 0.75rem;
-    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    min-width: 200px;
+    text-align: center;
   }
   
   .footer-bottom {
-    padding: 1rem;
+    padding: 1rem 0.75rem;
   }
   
   .footer-copyright {
@@ -190,9 +241,10 @@
   }
 }
 
-@media (max-width: 480px) {
+/* Extra small devices */
+@media (max-width: 360px) {
   .footer-content {
-    padding: 1.5rem 0.75rem 1rem;
+    padding: 1.25rem 0.5rem 0.75rem;
     gap: 1.25rem;
   }
   
@@ -206,28 +258,17 @@
   
   .footer-description {
     font-size: 0.85rem;
-  }
-  
-  .footer-links li {
-    margin-bottom: 0.5rem;
+    max-width: 250px;
   }
   
   .footer-link {
     font-size: 0.85rem;
-  }
-  
-  .contact-button {
-    padding: 0.5rem;
-    font-size: 0.85rem;
-  }
-  
-  .contact-item {
-    padding: 0.5rem;
-    font-size: 0.85rem;
+    padding: 0.35rem 0.7rem;
+    min-width: 180px;
   }
   
   .footer-bottom {
-    padding: 0.75rem;
+    padding: 0.75rem 0.5rem;
   }
   
   .footer-copyright {
