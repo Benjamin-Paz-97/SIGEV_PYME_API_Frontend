@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -17,10 +17,10 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route element={<AppLayout />}>
             <Route 
-              path="/" 
+              path="/dashboard" 
               element={
                 <ProtectedRoute>
                   <Dashboard />
@@ -91,7 +91,6 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
-                <Route path="/dashboard" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
       </Router>

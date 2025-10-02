@@ -37,7 +37,7 @@ const Login: React.FC = () => {
     try {
       // Usar el método login del contexto para actualizar el estado global
       await login(email, password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (error: any) {
       console.error('Error en login:', error);
       
@@ -50,7 +50,7 @@ const Login: React.FC = () => {
         if (shouldUseTempLogin) {
           // Login temporal para desarrollo
           localStorage.setItem('authToken', 'temp-dev-token');
-          navigate('/');
+          navigate('/dashboard');
           return;
         }
       }
@@ -122,7 +122,7 @@ const Login: React.FC = () => {
 
       // Usar el método register del contexto para actualizar el estado global
       await register(payload);
-      navigate('/');
+      navigate('/dashboard');
     } catch (error: any) {
       console.error('Error en registro:', error);
       console.error('Response data:', error.response?.data);
