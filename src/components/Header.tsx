@@ -25,11 +25,11 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
   const handleLogout = async () => {
     try {
       await authService.logout();
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       console.error('Error en logout:', error);
       localStorage.removeItem('authToken');
-      navigate('/login');
+      navigate('/');
     }
   };
 
@@ -44,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
   };
 
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate('/');
   };
 
   const handleServiceClick = () => {
@@ -116,12 +116,10 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
                       <span className="menu-icon">⚙️</span>
                       Configuración
                     </div>
-                    {user?.companyId && (
-                      <div className="user-menu-item" onClick={handleCompanyClick}>
-                        <span className="menu-icon">🏢</span>
-                        Mi Empresa
-                      </div>
-                    )}
+                    <div className="user-menu-item" onClick={handleCompanyClick}>
+                      <span className="menu-icon">🏢</span>
+                      Mi Empresa
+                    </div>
                     <div className="user-menu-item logout" onClick={handleLogout}>
                       <span className="menu-icon">🚪</span>
                       Cerrar Sesión
