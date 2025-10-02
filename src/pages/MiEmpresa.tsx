@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userService, companyService, type Company, type Product, type Sale } from '../services/authService';
+import { userService, companyService, authService, type Company, type Product, type Sale } from '../services/authService';
 import { productService } from '../services/productService';
 import { salesService } from '../services/salesService';
+import { useAuth } from '../hooks/useAuth';
 import BarChart from '../components/BarChart';
 import CompanyRegistration from '../components/CompanyRegistration';
 import '../styles/MiEmpresaStyles.css';
 
 const MiEmpresa: React.FC = () => {
   const navigate = useNavigate();
+  const { user, refreshUser } = useAuth();
   const [company, setCompany] = useState<Company | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [sales, setSales] = useState<Sale[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showRegistration, setShowRegistration] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -82,6 +85,36 @@ const MiEmpresa: React.FC = () => {
 
   const handleRegisterCompany = () => {
     setShowRegistration(true);
+  };
+
+  const handleDeleteCompany = async () => {
+    try {
+      if (!company?.id) return;
+      const confirmed = window.confirm('¿Seguro que deseas eliminar esta empresa? Esta acción es irreversible.');
+      if (!confirmed) return;
+
+      setIsDeleting(true);
+      console.log('Eliminando empresa con id:', company.id);
+      await companyService.delete(company.id);
+      console.log('Empresa eliminada. Actualizando usuario para limpiar companyId...');
+
+      // Limpiar companyId del usuario
+      const currentUser = user || (await userService.getCurrentUser());
+      await authService.updateUser({ id: currentUser.id, companyId: null });
+      await refreshUser();
+
+      // Limpiar estados locales y mostrar registro
+      setCompany(null);
+      setProducts([]);
+      setSales([]);
+      setShowRegistration(true);
+      alert('Empresa eliminada correctamente. Puedes registrar una nueva empresa.');
+    } catch (e: any) {
+      console.error('Error eliminando empresa:', e);
+      alert(e?.message || 'No se pudo eliminar la empresa.');
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // Calcular estadísticas reales desde la API
@@ -292,6 +325,14 @@ const MiEmpresa: React.FC = () => {
               <div className="button-content">
                 <div className="button-title">Gestionar Clientes</div>
                 <div className="button-subtitle">Próximamente disponible</div>
+              </div>
+            </button>
+
+            <button className="action-button secondary" onClick={handleDeleteCompany} disabled={isDeleting}>
+              <span className="button-icon">🗑️</span>
+              <div className="button-content">
+                <div className="button-title">Eliminar Empresa</div>
+                <div className="button-subtitle">{isDeleting ? 'Eliminando...' : 'Esta acción es irreversible'}</div>
               </div>
             </button>
           </div>
