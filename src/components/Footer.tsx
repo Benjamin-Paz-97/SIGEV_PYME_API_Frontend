@@ -1,12 +1,39 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import '../styles/FooterStyles.css';
 
 const Footer: React.FC = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const handleLogoClick = () => {
+    if (isAuthenticated) {
+      // Si ya estamos en dashboard, recargar la página
+      if (window.location.pathname === '/dashboard') {
+        window.location.reload();
+      } else {
+        // Si no estamos en dashboard, navegar allí
+        navigate('/dashboard');
+      }
+    } else {
+      navigate('/');
+    }
+  };
+
+  const handleServiceClick = (path: string) => {
+    if (isAuthenticated) {
+      navigate(path);
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3 className="footer-title">SIGEV-PYME</h3>
+          <h3 className="footer-title" onClick={handleLogoClick}>SIGEV-PYME</h3>
           <p className="footer-description">
             Sistema integral de gestión empresarial para pequeñas y medianas empresas.
           </p>
@@ -15,10 +42,10 @@ const Footer: React.FC = () => {
         <div className="footer-section">
           <h4 className="footer-subtitle">Servicios</h4>
           <ul className="footer-links">
-            <li><a href="/inventario" className="footer-link">Gestión de Inventario</a></li>
-            <li><a href="/ventas" className="footer-link">Ventas y Facturación</a></li>
-            <li><a href="/compras" className="footer-link">Compras</a></li>
-            <li><a href="/reportes" className="footer-link">Reportes</a></li>
+            <li><button onClick={() => handleServiceClick('/inventario')} className="footer-link">Gestión de Inventario</button></li>
+            <li><button onClick={() => handleServiceClick('/ventas')} className="footer-link">Ventas y Facturación</button></li>
+            <li><button onClick={() => handleServiceClick('/compras')} className="footer-link">Compras</button></li>
+            <li><button onClick={() => handleServiceClick('/reportes')} className="footer-link">Reportes</button></li>
           </ul>
         </div>
         

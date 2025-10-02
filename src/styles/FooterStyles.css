@@ -27,6 +27,14 @@
   color: #3b82f6;
   margin: 0 0 1rem 0;
   text-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.footer-title:hover {
+  color: #1d4ed8;
+  transform: scale(1.05);
+  text-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
 }
 
 .footer-subtitle {
@@ -56,6 +64,13 @@
   color: #9ca3af;
   text-decoration: none;
   transition: color 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
 }
 
 .footer-link:hover {

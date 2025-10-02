@@ -15,7 +15,17 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const handleLogoClick = () => {
-    navigate('/');
+    if (isAuthenticated) {
+      // Si ya estamos en dashboard, recargar la página
+      if (window.location.pathname === '/dashboard') {
+        window.location.reload();
+      } else {
+        // Si no estamos en dashboard, navegar allí
+        navigate('/dashboard');
+      }
+    } else {
+      navigate('/');
+    }
   };
 
   const handleUserMenuToggle = () => {
