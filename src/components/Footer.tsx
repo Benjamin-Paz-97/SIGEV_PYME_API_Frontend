@@ -24,20 +24,11 @@ const Footer: React.FC = () => {
         
         <div className="footer-section">
           <h4 className="footer-subtitle">Contactanos</h4>
-          <div className="footer-contact">
-            <a href="mailto:soporte@sigev-pyme.com" className="contact-button">
-              <span className="contact-icon">📧</span>
-              soporte@sigev-pyme.com
-            </a>
-            <a href="tel:+51951907810" className="contact-button">
-              <span className="contact-icon">📞</span>
-              (+51) 951 907 810
-            </a>
-            <div className="contact-item">
-              <span className="contact-icon">📍</span>
-              Tingo Maria, Perú
-            </div>
-          </div>
+          <ul className="footer-links">
+            <li><a href="mailto:soporte@sigev-pyme.com" className="footer-link">soporte@sigev-pyme.com</a></li>
+            <li><a href="tel:+51951907810" className="footer-link">(+51) 951 907 810</a></li>
+            <li>Tingo Maria, Perú</li>
+          </ul>
         </div>
       </div>
       

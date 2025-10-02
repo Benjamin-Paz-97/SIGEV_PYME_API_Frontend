@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../services/authService';
+import { useAuth } from '../hooks/useAuth';
 // import NetworkTestComponent from '../components/NetworkTestComponent';
 import FondoLogin from '../assets/FondoLogin.jpg';
-import logo from '../assets/logo.png';
+import logo2 from '../assets/logo2.jpg';
 import '../styles/LoginStyles.css';
 
 const Login: React.FC = () => {
@@ -27,6 +27,7 @@ const Login: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const navigate = useNavigate();
+  const { login, register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,8 +35,8 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      // Intentar login real primero
-      await authService.login({ email, password });
+      // Usar el método login del contexto para actualizar el estado global
+      await login(email, password);
       navigate('/');
     } catch (error: any) {
       console.error('Error en login:', error);
@@ -119,7 +120,8 @@ const Login: React.FC = () => {
       console.log('Payload de registro:', payload);
       console.log('Datos del formulario:', registerData);
 
-      await authService.register(payload);
+      // Usar el método register del contexto para actualizar el estado global
+      await register(payload);
       navigate('/');
     } catch (error: any) {
       console.error('Error en registro:', error);
@@ -161,8 +163,7 @@ const Login: React.FC = () => {
              <div className="login-form">
                  {/* Logo */}
                  <div className="login-logo-container">
-                     <img src={logo} alt="SIGEV-PYME Logo" className="login-logo-image" />
-                     <h1 className="login-app-name">SIGEV-PYME</h1>
+                     <img src={logo2} alt="Logo" className="login-logo-image" />
                  </div>
                  
                  <form onSubmit={isRegisterMode ? handleRegisterSubmit : handleSubmit} className="login-form-fields">
