@@ -41,15 +41,11 @@ const Inventario: React.FC = () => {
             // Guardar todos los productos para el banner de debug
             setAllProducts(fetchedProducts);
             
+            // Filtrar productos de la empresa sin try-catch para evitar problemas en mobile
             const companyProducts = fetchedProducts.filter((p: Product) => {
-              try {
-                const matches = String(p.companyId).trim() === String(user.companyId).trim();
-                console.log(`Producto ${p.name} - companyId: "${p.companyId}", user.companyId: "${user.companyId}", match: ${matches}`);
-                return matches;
-              } catch (error) {
-                console.error(`Error comparando producto ${p.name}:`, error);
-                return false;
-              }
+              const productCompanyId = String(p.companyId || '').trim();
+              const userCompanyId = String(user.companyId || '').trim();
+              return productCompanyId === userCompanyId;
             });
             
             console.log('Productos filtrados para la empresa:', companyProducts.length);
