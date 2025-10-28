@@ -1,7 +1,13 @@
 import React from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import '../styles/DashboardStyles.css';
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const companyName = user?.companyNombre || 'Sin empresa';
+  const waMessage = encodeURIComponent(`Hola soporte, necesito ayuda con SIGEV-PYME. Empresa: ${companyName}.`);
   return (
     <div className="dashboard-container">
       {/* Main Content */}
@@ -79,25 +85,31 @@ const Dashboard: React.FC = () => {
           <section id="servicios" className="services-section">
             <h3 className="section-title">Servicios</h3>
             <div className="services-grid">
-              <div className="service-card">
+              <div className="service-card" onClick={() => navigate('/inventario')} role="button" tabIndex={0}>
                 <div className="service-icon">📦</div>
                 <h4 className="service-title">Gestión de Inventario</h4>
                 <p className="service-description">Controla tu stock, productos y proveedores</p>
               </div>
               
-              <div className="service-card">
+              <div className="service-card" onClick={() => navigate('/ventas')} role="button" tabIndex={0}>
                 <div className="service-icon">💰</div>
                 <h4 className="service-title">Ventas y Facturación</h4>
                 <p className="service-description">Registra ventas y genera facturas</p>
               </div>
               
-              <div className="service-card">
+              <div className="service-card" onClick={() => navigate('/soporte')} role="button" tabIndex={0}>
+                <div className="service-icon">🛟</div>
+                <h4 className="service-title">Soporte</h4>
+                <p className="service-description">Ayuda, preguntas frecuentes y contacto directo</p>
+              </div>
+
+              <div className="service-card" onClick={() => navigate('/compras')} role="button" tabIndex={0}>
                 <div className="service-icon">🛒</div>
                 <h4 className="service-title">Compras</h4>
                 <p className="service-description">Gestiona órdenes de compra y proveedores</p>
               </div>
               
-              <div className="service-card">
+              <div className="service-card" onClick={() => navigate('/reportes')} role="button" tabIndex={0}>
                 <div className="service-icon">📊</div>
                 <h4 className="service-title">Reportes</h4>
                 <p className="service-description">Analiza el rendimiento de tu empresa</p>
@@ -121,7 +133,15 @@ const Dashboard: React.FC = () => {
                   <span className="contact-icon">📞</span>
                   <div>
                     <h4>Teléfono</h4>
-                    <p>(+51) 951 907 810</p>
+                    <p>
+                      <a
+                        href={`https://wa.me/51951907810?text=${waMessage}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        (+51) 951 907 810
+                      </a>
+                    </p>
                   </div>
                 </div>
                 <div className="contact-item">

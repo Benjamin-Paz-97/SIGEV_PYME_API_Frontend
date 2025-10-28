@@ -5,7 +5,9 @@ import '../styles/FooterStyles.css';
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const companyName = user?.companyNombre || 'Sin empresa';
+  const waMessage = encodeURIComponent(`Hola soporte, necesito ayuda con SIGEV-PYME. Empresa: ${companyName}.`);
 
   const handleLogoClick = () => {
     if (isAuthenticated) {
@@ -44,7 +46,6 @@ const Footer: React.FC = () => {
           <ul className="footer-links">
             <li><button onClick={() => handleServiceClick('/inventario')} className="footer-link">Gestión de Inventario</button></li>
             <li><button onClick={() => handleServiceClick('/ventas')} className="footer-link">Ventas y Facturación</button></li>
-            <li><button onClick={() => handleServiceClick('/compras')} className="footer-link">Compras</button></li>
             <li><button onClick={() => handleServiceClick('/reportes')} className="footer-link">Reportes</button></li>
           </ul>
         </div>
@@ -53,7 +54,16 @@ const Footer: React.FC = () => {
           <h4 className="footer-subtitle">Contactanos</h4>
           <ul className="footer-links">
             <li><a href="mailto:soporte@sigev-pyme.com" className="footer-link">soporte@sigev-pyme.com</a></li>
-            <li><a href="tel:+51951907810" className="footer-link">(+51) 951 907 810</a></li>
+            <li>
+              <a
+                href={`https://wa.me/51951907810?text=${waMessage}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link"
+              >
+                (+51) 951 907 810
+              </a>
+            </li>
             <li>Tingo Maria, Perú</li>
           </ul>
         </div>

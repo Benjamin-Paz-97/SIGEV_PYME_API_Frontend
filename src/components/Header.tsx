@@ -58,6 +58,11 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
     setIsUserMenuOpen(false);
   };
 
+  const handleGoto = (path: string) => {
+    navigate(path);
+    setIsUserMenuOpen(false);
+  };
+
   const handleLoginClick = () => {
     navigate('/');
   };
@@ -134,6 +139,23 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
                     <div className="user-menu-item" onClick={handleCompanyClick}>
                       <span className="menu-icon">🏢</span>
                       Mi Empresa
+                    </div>
+                    <div className="user-menu-separator" />
+                    <div className="user-menu-item" onClick={() => handleGoto('/inventario')}>
+                      <span className="menu-icon">📦</span>
+                      Gestión de Inventario
+                    </div>
+                    <div className="user-menu-item" onClick={() => handleGoto('/ventas')}>
+                      <span className="menu-icon">💰</span>
+                      Ventas y Facturación
+                    </div>
+                    <div className="user-menu-item" onClick={() => handleGoto('/reportes')}>
+                      <span className="menu-icon">📊</span>
+                      Reportes
+                    </div>
+                    <div className="user-menu-item" onClick={() => handleGoto('/soporte')}>
+                      <span className="menu-icon">🛟</span>
+                      Soporte
                     </div>
                     <div className="user-menu-item logout" onClick={handleLogout}>
                       <span className="menu-icon">🚪</span>

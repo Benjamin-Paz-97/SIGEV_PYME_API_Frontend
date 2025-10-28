@@ -9,6 +9,8 @@ import Inventario from './pages/Inventario';
 import Ventas from './pages/Ventas';
 import NuevaVenta from './pages/NuevaVenta';
 import DetalleVenta from './pages/DetalleVenta';
+import Soporte from './pages/Soporte';
+import Reportes from './pages/Reportes';
 import ProtectedRoute from './components/ProtectedRoute';
 import AppLayout from './components/AppLayout';
 
@@ -91,6 +93,22 @@ function App() {
                     </ProtectedRoute>
                   } 
                 />
+            <Route 
+              path="/soporte" 
+              element={
+                <ProtectedRoute>
+                  <Soporte />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/reportes" 
+              element={
+                <ProtectedRoute>
+                  <Reportes />
+                </ProtectedRoute>
+              } 
+            />
           </Route>
         </Routes>
       </Router>
