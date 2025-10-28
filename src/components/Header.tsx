@@ -153,6 +153,10 @@ const Header: React.FC<HeaderProps> = ({ showBackButton = false, onBackClick }) 
                       <span className="menu-icon">📊</span>
                       Reportes
                     </div>
+                    <div className="user-menu-item" onClick={() => handleGoto('/compras')}>
+                      <span className="menu-icon">🛒</span>
+                      Compras
+                    </div>
                     <div className="user-menu-item" onClick={() => handleGoto('/soporte')}>
                       <span className="menu-icon">🛟</span>
                       Soporte

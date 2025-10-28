@@ -46,6 +46,7 @@ const Footer: React.FC = () => {
           <ul className="footer-links">
             <li><button onClick={() => handleServiceClick('/inventario')} className="footer-link">Gestión de Inventario</button></li>
             <li><button onClick={() => handleServiceClick('/ventas')} className="footer-link">Ventas y Facturación</button></li>
+            <li><button onClick={() => handleServiceClick('/compras')} className="footer-link">Compras</button></li>
             <li><button onClick={() => handleServiceClick('/reportes')} className="footer-link">Reportes</button></li>
           </ul>
         </div>
