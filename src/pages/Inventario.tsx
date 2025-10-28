@@ -10,6 +10,7 @@ const Inventario: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -33,11 +34,14 @@ const Inventario: React.FC = () => {
         if (user.companyId) {
           // Obtener productos de la empresa usando GET /api/Product
           try {
-            const allProducts = await productService.getAll();
-            console.log('Todos los productos obtenidos:', allProducts);
+            const fetchedProducts = await productService.getAll();
+            console.log('Todos los productos obtenidos:', fetchedProducts);
             console.log('companyId del usuario:', user.companyId);
             
-            const companyProducts = allProducts.filter((p: Product) => {
+            // Guardar todos los productos para el banner de debug
+            setAllProducts(fetchedProducts);
+            
+            const companyProducts = fetchedProducts.filter((p: Product) => {
               console.log(`Producto ${p.name} - companyId: ${p.companyId}, match: ${p.companyId === user.companyId}`);
               return p.companyId === user.companyId;
             });
@@ -296,6 +300,20 @@ const Inventario: React.FC = () => {
     <div className="inventario-container">
       <main className="inventario-main">
         <div className="inventario-content">
+          {/* Debug Banner */}
+          {products.length === 0 && allProducts.length > 0 && (
+            <div style={{ 
+              background: '#fef3c7', 
+              padding: '12px', 
+              borderRadius: '8px', 
+              marginBottom: '16px',
+              border: '1px solid #f59e0b'
+            }}>
+              <strong>🔍 Debug:</strong> Se obtuvieron {allProducts.length} productos, pero ninguno coincide con companyId: {currentUser?.companyId}. 
+              <br />Productos: {allProducts.map(p => `${p.name} (${p.companyId})`).join(', ')}
+            </div>
+          )}
+          
           {/* Header */}
           <section className="inventario-header">
             <div className="header-content">
