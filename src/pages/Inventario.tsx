@@ -300,17 +300,24 @@ const Inventario: React.FC = () => {
     <div className="inventario-container">
       <main className="inventario-main">
         <div className="inventario-content">
-          {/* Debug Banner */}
-          {products.length === 0 && allProducts.length > 0 && (
+          {/* Debug Banner - Siempre mostrar mientras hay datos */}
+          {allProducts.length > 0 && (
             <div style={{ 
-              background: '#fef3c7', 
+              background: products.length > 0 ? '#dcfce7' : '#fee2e2', 
               padding: '12px', 
               borderRadius: '8px', 
               marginBottom: '16px',
-              border: '1px solid #f59e0b'
+              border: products.length > 0 ? '1px solid #22c55e' : '1px solid #ef4444'
             }}>
-              <strong>🔍 Debug:</strong> Se obtuvieron {allProducts.length} productos, pero ninguno coincide con companyId: {currentUser?.companyId}. 
-              <br />Productos: {allProducts.map(p => `${p.name} (${p.companyId})`).join(', ')}
+              <strong>{products.length > 0 ? '✅' : '❌'} Debug:</strong>
+              <br />Usuario companyId: <code>{currentUser?.companyId}</code>
+              <br />Productos totales: {allProducts.length}
+              <br />Productos filtrados: {products.length}
+              <br />Detalle por producto: {allProducts.map((p: Product) => (
+                <span key={p.id}>
+                  <br />- {p.name}: companyId="{p.companyId}", tipo: {typeof p.companyId}, match: {p.companyId === currentUser?.companyId ? '✅' : '❌'}
+                </span>
+              ))}
             </div>
           )}
           
