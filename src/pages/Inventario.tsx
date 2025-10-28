@@ -23,10 +23,10 @@ const Inventario: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Solicitar permisos de notificación
-        if ('Notification' in window && Notification.permission === 'default') {
-          await Notification.requestPermission();
-        }
+        // Solicitar permisos de notificación (desactivado temporalmente para debug)
+        // if ('Notification' in window && Notification.permission === 'default') {
+        //   await Notification.requestPermission();
+        // }
 
         const user = await userService.getCurrentUser();
         setCurrentUser(user);
