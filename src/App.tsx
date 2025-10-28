@@ -11,6 +11,7 @@ import NuevaVenta from './pages/NuevaVenta';
 import DetalleVenta from './pages/DetalleVenta';
 import Soporte from './pages/Soporte';
 import Reportes from './pages/Reportes';
+import Compras from './pages/Compras';
 import ProtectedRoute from './components/ProtectedRoute';
 import AppLayout from './components/AppLayout';
 
@@ -106,6 +107,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Reportes />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/compras" 
+              element={
+                <ProtectedRoute>
+                  <Compras />
                 </ProtectedRoute>
               } 
             />
