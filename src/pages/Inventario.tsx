@@ -10,7 +10,6 @@ const Inventario: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -37,9 +36,6 @@ const Inventario: React.FC = () => {
             const fetchedProducts = await productService.getAll();
             console.log('Todos los productos obtenidos:', fetchedProducts);
             console.log('companyId del usuario:', user.companyId);
-            
-            // Guardar todos los productos para el banner de debug
-            setAllProducts(fetchedProducts);
             
             // Filtrar productos de la empresa sin try-catch para evitar problemas en mobile
             const companyProducts = fetchedProducts.filter((p: Product) => {
@@ -141,9 +137,6 @@ const Inventario: React.FC = () => {
         console.log('Total después:', updated.length);
         return updated;
       });
-      
-      // También actualizar allProducts para el banner de debug
-      setAllProducts(prev => [...prev, newProduct]);
       
       // Resetear formulario
       setFormData({
@@ -312,26 +305,6 @@ const Inventario: React.FC = () => {
     <div className="inventario-container">
       <main className="inventario-main">
         <div className="inventario-content">
-          {/* Debug Banner - Solo mostrar si hay problema */}
-          {allProducts.length > 0 && products.length === 0 && (
-            <div style={{ 
-              background: '#fee2e2', 
-              padding: '12px', 
-              borderRadius: '8px', 
-              marginBottom: '16px',
-              border: '1px solid #ef4444'
-            }}>
-              <strong>❌ Debug:</strong>
-              <br />Usuario companyId: <code>{currentUser?.companyId}</code>
-              <br />Productos totales: {allProducts.length}, Productos filtrados: {products.length}
-              <br />Detalle: {allProducts.map((p: Product) => (
-                <span key={p.id}>
-                  <br />- {p.name}: companyId="{p.companyId}", match: {p.companyId === currentUser?.companyId ? '✅' : '❌'}
-                </span>
-              ))}
-            </div>
-          )}
-          
           {/* Header */}
           <section className="inventario-header">
             <div className="header-content">
