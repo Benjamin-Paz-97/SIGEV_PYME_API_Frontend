@@ -53,7 +53,11 @@ const Compras: React.FC = () => {
       
       // Actualizar el stock sumando la cantidad comprada
       const updatedProduct = await productService.update(selectedProduct.id, {
-        stock: selectedProduct.stock + purchaseQuantity
+        name: selectedProduct.name,
+        description: selectedProduct.description,
+        stock: selectedProduct.stock + purchaseQuantity,
+        price: selectedProduct.price,
+        minStockAlert: selectedProduct.minStockAlert
       });
       
       // Actualizar el producto en el estado local
