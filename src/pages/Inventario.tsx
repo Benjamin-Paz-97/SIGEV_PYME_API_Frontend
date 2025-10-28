@@ -14,13 +14,19 @@ const Inventario: React.FC = () => {
     name: '',
     description: '',
     stock: 0,
-    price: 0
+    price: 0,
+    minStockAlert: 5
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const loadData = async () => {
       try {
+        // Solicitar permisos de notificación
+        if ('Notification' in window && Notification.permission === 'default') {
+          await Notification.requestPermission();
+        }
+
         const user = await userService.getCurrentUser();
         setCurrentUser(user);
         
@@ -30,6 +36,15 @@ const Inventario: React.FC = () => {
             const allProducts = await productService.getAll();
             const companyProducts = allProducts.filter((p: Product) => p.companyId === user.companyId);
             setProducts(companyProducts);
+
+            // Verificar productos con stock bajo y mostrar notificaciones
+            companyProducts.forEach((product: Product) => {
+              if (product.stock === 0) {
+                showStockNotification(product.name, product.stock, product.minStockAlert);
+              } else if (product.stock <= product.minStockAlert) {
+                showStockNotification(product.name, product.stock, product.minStockAlert);
+              }
+            });
           } catch (productError) {
             console.error('Error obteniendo productos:', productError);
             setProducts([]);
@@ -98,7 +113,7 @@ const Inventario: React.FC = () => {
         stock: formData.stock,
         price: formData.price,
         companyId: currentUser.companyId,
-        minStockAlert: 5 // Valor fijo como solicitado
+        minStockAlert: formData.minStockAlert || 5 // Valor por defecto 5 si no se ingresa
       };
 
       const newProduct = await productService.create(payload);
@@ -111,7 +126,8 @@ const Inventario: React.FC = () => {
         name: '',
         description: '',
         stock: 0,
-        price: 0
+        price: 0,
+        minStockAlert: 5
       });
       setErrors({});
       setIsModalOpen(false);
@@ -127,7 +143,8 @@ const Inventario: React.FC = () => {
       name: '',
       description: '',
       stock: 0,
-      price: 0
+      price: 0,
+      minStockAlert: 5
     });
     setErrors({});
     setIsModalOpen(false);
@@ -143,9 +160,41 @@ const Inventario: React.FC = () => {
       name: product.name,
       description: product.description,
       stock: product.stock,
-      price: product.price
+      price: product.price,
+      minStockAlert: product.minStockAlert || 5
     });
     setIsModalOpen(true);
+  };
+
+  // Función para obtener el estado del stock
+  const getStockStatus = (stock: number, minStock: number) => {
+    if (stock === 0) return 'red';
+    if (stock <= minStock) return 'amber';
+    return 'green';
+  };
+
+  const getStockMessage = (stock: number, minStock: number) => {
+    if (stock === 0) return 'Sin stock - Comprar urgentemente';
+    if (stock <= minStock) return `Stock bajo - Solo ${stock} unidades`;
+    return `Stock disponible`;
+  };
+
+  const showStockNotification = (productName: string, stock: number, minStock: number) => {
+    if (stock === 0) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(`⚠️ Sin stock: ${productName}`, {
+          body: 'Necesitas comprar este producto urgentemente',
+          icon: '🔴'
+        });
+      }
+    } else if (stock <= minStock) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(`⚠️ Stock bajo: ${productName}`, {
+          body: `Solo quedan ${stock} unidades disponibles`,
+          icon: '🟡'
+        });
+      }
+    }
   };
 
   const handleDeleteProduct = async (productId: string) => {
@@ -187,7 +236,8 @@ const Inventario: React.FC = () => {
         name: formData.name,
         description: formData.description,
         stock: formData.stock,
-        price: formData.price
+        price: formData.price,
+        minStockAlert: formData.minStockAlert || 5
       });
       
       console.log('Producto actualizado exitosamente:', updatedProduct);
@@ -200,7 +250,8 @@ const Inventario: React.FC = () => {
         name: '',
         description: '',
         stock: 0,
-        price: 0
+        price: 0,
+        minStockAlert: 5
       });
       setErrors({});
       setIsModalOpen(false);
@@ -273,13 +324,22 @@ const Inventario: React.FC = () => {
               </div>
             ) : (
               <div className="products-grid">
-                {products.map((product) => (
-                  <div key={product.id} className="product-card">
+                {products.map((product) => {
+                  const stockStatus = getStockStatus(product.stock, product.minStockAlert);
+                  const stockMessage = getStockMessage(product.stock, product.minStockAlert);
+                  
+                  return (
+                  <div key={product.id} className={`product-card stock-${stockStatus}`}>
                     <div className="product-header">
                       <h3 className="product-name">{product.name}</h3>
-                      <span className={`stock-badge ${product.stock <= product.minStockAlert ? 'low' : 'good'}`}>
-                        {product.stock} unidades
-                      </span>
+                      <div className="stock-info">
+                        <span className={`stock-badge status-${stockStatus}`}>
+                          {product.stock} unidades
+                        </span>
+                        <span className={`stock-alert alert-${stockStatus}`} title={stockMessage}>
+                          {stockStatus === 'red' ? '🔴' : stockStatus === 'amber' ? '🟡' : '🟢'}
+                        </span>
+                      </div>
                     </div>
                     <p className="product-description">{product.description}</p>
                     <div className="product-details">
@@ -306,8 +366,15 @@ const Inventario: React.FC = () => {
                         Eliminar
                       </button>
                     </div>
+                    {stockStatus === 'red' && (
+                      <div className="stock-warning-message">
+                        <span className="warning-icon">⚠️</span>
+                        <span className="warning-text">{stockMessage}</span>
+                      </div>
+                    )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </section>
@@ -402,6 +469,28 @@ const Inventario: React.FC = () => {
                   {errors.price && (
                     <span className="error-message">{errors.price}</span>
                   )}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="minStockAlert" className="form-label">
+                    Alerta de Stock Mínimo *
+                  </label>
+                  <input
+                    type="number"
+                    id="minStockAlert"
+                    name="minStockAlert"
+                    value={formData.minStockAlert}
+                    onChange={handleInputChange}
+                    className={`form-input ${errors.minStockAlert ? 'error' : ''}`}
+                    placeholder="5"
+                    min="0"
+                  />
+                  {errors.minStockAlert && (
+                    <span className="error-message">{errors.minStockAlert}</span>
+                  )}
+                  <small style={{ color: '#666', fontSize: '12px', display: 'block', marginTop: '4px' }}>
+                    Alerta cuando el stock sea menor a este valor (por defecto: 5)
+                  </small>
                 </div>
               </div>
 

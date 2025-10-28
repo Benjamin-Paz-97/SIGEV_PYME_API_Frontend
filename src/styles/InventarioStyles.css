@@ -740,3 +740,72 @@
     font-size: 0.85rem;
   }
 }
+
+/* Estilos para indicadores de stock */
+.stock-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stock-alert {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* Badges de estado de stock */
+.stock-badge.status-green {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.stock-badge.status-amber {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.stock-badge.status-red {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Bordes de tarjetas por estado */
+.product-card.stock-green {
+  border-left: 4px solid #22c55e;
+}
+
+.product-card.stock-amber {
+  border-left: 4px solid #eab308;
+  background: #fffbf5;
+}
+
+.product-card.stock-red {
+  border-left: 4px solid #ef4444;
+  background: #fef2f2;
+}
+
+.product-card.stock-red:hover {
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+}
+
+/* Mensaje de advertencia */
+.stock-warning-message {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #fee2e2;
+  border-left: 3px solid #dc2626;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.warning-icon {
+  font-size: 1.2rem;
+}
+
+.warning-text {
+  color: #dc2626;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
