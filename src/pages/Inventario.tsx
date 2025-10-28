@@ -135,9 +135,19 @@ const Inventario: React.FC = () => {
       };
 
       const newProduct = await productService.create(payload);
+      console.log('Producto creado exitosamente:', newProduct);
+      console.log('Añadiendo producto al estado local. Productos antes:', products.length);
       
       // Agregar el producto a la lista local
-      setProducts(prev => [...prev, newProduct]);
+      setProducts(prev => {
+        console.log('Actualizando products con nuevo producto. Total antes:', prev.length);
+        const updated = [...prev, newProduct];
+        console.log('Total después:', updated.length);
+        return updated;
+      });
+      
+      // También actualizar allProducts para el banner de debug
+      setAllProducts(prev => [...prev, newProduct]);
       
       // Resetear formulario
       setFormData({
