@@ -66,12 +66,10 @@ const Reportes: React.FC = () => {
     const rows = filteredSales.map((s) => {
       const fecha = new Date(s.fecha).toLocaleString();
       const cliente = s.clienteNombre || s.clienteDocumento || '-';
-      const metodo = typeof s.metodoPago === 'number' ? s.metodoPago : (s as any).paymentMethod;
       return `<tr>
         <td>${s.id}</td>
         <td>${fecha}</td>
         <td>${cliente}</td>
-        <td>${metodo ?? '-'}</td>
         <td style="text-align:right;">S/. ${(s.total || 0).toFixed(2)}</td>
       </tr>`;
     }).join('');
@@ -87,14 +85,13 @@ const Reportes: React.FC = () => {
               <th>ID</th>
               <th>Fecha</th>
               <th>Cliente</th>
-              <th>Método</th>
               <th>Total</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
           <tfoot>
             <tr>
-              <td colspan="4" style="text-align:right;">Total</td>
+              <td colspan="3" style="text-align:right;">Total</td>
               <td style="text-align:right;">S/. ${totalAmount.toFixed(2)}</td>
             </tr>
           </tfoot>
@@ -132,26 +129,23 @@ const Reportes: React.FC = () => {
                   <th style={{ textAlign: 'left', border: '1px solid #e5e7eb', padding: 8, background: '#f5f5f5' }}>ID</th>
                   <th style={{ textAlign: 'left', border: '1px solid #e5e7eb', padding: 8, background: '#f5f5f5' }}>Fecha</th>
                   <th style={{ textAlign: 'left', border: '1px solid #e5e7eb', padding: 8, background: '#f5f5f5' }}>Cliente</th>
-                  <th style={{ textAlign: 'left', border: '1px solid #e5e7eb', padding: 8, background: '#f5f5f5' }}>Método</th>
                   <th style={{ textAlign: 'right', border: '1px solid #e5e7eb', padding: 8, background: '#f5f5f5' }}>Total</th>
                 </tr>
               </thead>
               <tbody>
                 {isLoading ? (
-                  <tr><td colSpan={5} style={{ padding: 12 }}>Cargando...</td></tr>
+                  <tr><td colSpan={4} style={{ padding: 12 }}>Cargando...</td></tr>
                 ) : filteredSales.length === 0 ? (
-                  <tr><td colSpan={5} style={{ padding: 12, color: '#555' }}>No hay ventas para el rango seleccionado.</td></tr>
+                  <tr><td colSpan={4} style={{ padding: 12, color: '#555' }}>No hay ventas para el rango seleccionado.</td></tr>
                 ) : (
                   filteredSales.map((s) => {
                     const fecha = new Date(s.fecha).toLocaleString();
                     const cliente = s.clienteNombre || s.clienteDocumento || '-';
-                    const metodo = typeof s.metodoPago === 'number' ? s.metodoPago : (s as any).paymentMethod;
                     return (
                       <tr key={s.id}>
                         <td style={{ border: '1px solid #e5e7eb', padding: 8 }}>{s.id}</td>
                         <td style={{ border: '1px solid #e5e7eb', padding: 8 }}>{fecha}</td>
                         <td style={{ border: '1px solid #e5e7eb', padding: 8 }}>{cliente}</td>
-                        <td style={{ border: '1px solid #e5e7eb', padding: 8 }}>{metodo ?? '-'}</td>
                         <td style={{ border: '1px solid #e5e7eb', padding: 8, textAlign: 'right' }}>S/. {(s.total || 0).toFixed(2)}</td>
                       </tr>
                     );

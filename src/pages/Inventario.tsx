@@ -34,7 +34,15 @@ const Inventario: React.FC = () => {
           // Obtener productos de la empresa usando GET /api/Product
           try {
             const allProducts = await productService.getAll();
-            const companyProducts = allProducts.filter((p: Product) => p.companyId === user.companyId);
+            console.log('Todos los productos obtenidos:', allProducts);
+            console.log('companyId del usuario:', user.companyId);
+            
+            const companyProducts = allProducts.filter((p: Product) => {
+              console.log(`Producto ${p.name} - companyId: ${p.companyId}, match: ${p.companyId === user.companyId}`);
+              return p.companyId === user.companyId;
+            });
+            
+            console.log('Productos filtrados para la empresa:', companyProducts.length);
             setProducts(companyProducts);
 
             // Verificar productos con stock bajo y mostrar notificaciones
