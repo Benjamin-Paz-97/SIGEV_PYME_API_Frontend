@@ -52,17 +52,29 @@ const faqs = [
     icon: '🧭',
     question: '¿No veo mis cambios después de editar la empresa?',
     answer:
-      'Tras guardar, la página recarga para reflejar los cambios. Si no, realiza un hard refresh (Ctrl+F5).',
+      'Tras guardar, la página recarga para reflejar los cambios. Si no, realiza un hard refresh (Ctrl+F5 en PC).',
     bullets: [
       'Verifica conexión estable antes de editar.',
       'Si persiste, cierra sesión y vuelve a entrar.'
     ],
   },
   {
+    icon: '🗂️',
+    question: '¿No cargan mis productos en el móvil pero sí en PC?',
+    answer:
+      'Este es un problema de caché del navegador. Necesitas limpiar la caché en tu móvil.',
+    bullets: [
+      'Android (Chrome): Ajustes → Privacidad y seguridad → Borrar datos de navegación → Marca "Imágenes y archivos en caché" → Borrar datos.',
+      'iOS (Safari): Ajustes → Safari → Borrar historial y datos de sitios web.',
+      'Alternativa: Usa el modo incógnito/privado para acceder sin caché.',
+      'También puedes cerrar completamente el navegador y volver a abrirlo.'
+    ],
+  },
+  {
     icon: '🟢',
     question: '¿Cómo contacto soporte?',
     answer:
-      'Presiona “Escribir por WhatsApp” para abrir un chat directo con el personal de soporte.',
+      'Presiona "Escribir por WhatsApp" para abrir un chat directo con el personal de soporte.',
     bullets: [
       'Incluye un mensaje con tu problema y captura si es posible.',
       'Indica tu correo y RUC de la empresa para agilizar.'
