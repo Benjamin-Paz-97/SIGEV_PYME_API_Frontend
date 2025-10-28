@@ -316,22 +316,21 @@ const Inventario: React.FC = () => {
     <div className="inventario-container">
       <main className="inventario-main">
         <div className="inventario-content">
-          {/* Debug Banner - Siempre mostrar mientras hay datos */}
-          {allProducts.length > 0 && (
+          {/* Debug Banner - Solo mostrar si hay problema */}
+          {allProducts.length > 0 && products.length === 0 && (
             <div style={{ 
-              background: products.length > 0 ? '#dcfce7' : '#fee2e2', 
+              background: '#fee2e2', 
               padding: '12px', 
               borderRadius: '8px', 
               marginBottom: '16px',
-              border: products.length > 0 ? '1px solid #22c55e' : '1px solid #ef4444'
+              border: '1px solid #ef4444'
             }}>
-              <strong>{products.length > 0 ? '✅' : '❌'} Debug:</strong>
+              <strong>❌ Debug:</strong>
               <br />Usuario companyId: <code>{currentUser?.companyId}</code>
-              <br />Productos totales: {allProducts.length}
-              <br />Productos filtrados: {products.length}
-              <br />Detalle por producto: {allProducts.map((p: Product) => (
+              <br />Productos totales: {allProducts.length}, Productos filtrados: {products.length}
+              <br />Detalle: {allProducts.map((p: Product) => (
                 <span key={p.id}>
-                  <br />- {p.name}: companyId="{p.companyId}", tipo: {typeof p.companyId}, match: {p.companyId === currentUser?.companyId ? '✅' : '❌'}
+                  <br />- {p.name}: companyId="{p.companyId}", match: {p.companyId === currentUser?.companyId ? '✅' : '❌'}
                 </span>
               ))}
             </div>
