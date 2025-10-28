@@ -42,8 +42,9 @@ const Inventario: React.FC = () => {
             setAllProducts(fetchedProducts);
             
             const companyProducts = fetchedProducts.filter((p: Product) => {
-              console.log(`Producto ${p.name} - companyId: ${p.companyId}, match: ${p.companyId === user.companyId}`);
-              return p.companyId === user.companyId;
+              const matches = String(p.companyId).trim() === String(user.companyId).trim();
+              console.log(`Producto ${p.name} - companyId: "${p.companyId}", user.companyId: "${user.companyId}", match: ${matches}`);
+              return matches;
             });
             
             console.log('Productos filtrados para la empresa:', companyProducts.length);
