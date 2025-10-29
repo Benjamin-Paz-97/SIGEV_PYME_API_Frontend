@@ -208,7 +208,9 @@ const MiEmpresa: React.FC = () => {
       
       // Filtrar ventas del mes específico
       const monthSales = sales.filter(sale => {
-        const saleDate = new Date(sale.fecha || sale.createdAt);
+        const fechaVenta = sale.fecha || sale.createdAt;
+        if (!fechaVenta) return false;
+        const saleDate = new Date(fechaVenta);
         return saleDate.getMonth() === targetMonth && saleDate.getFullYear() === targetYear;
       });
       

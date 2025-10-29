@@ -120,25 +120,27 @@ const DetalleVenta: React.FC = () => {
         </div>
 
         {/* Productos Vendidos */}
-        <div className="detail-section">
-          <h3 className="section-title">Productos Vendidos</h3>
-          <div className="products-list">
-            {sale.items.map((item, index) => (
-              <div key={index} className="product-item">
-                <div className="product-info">
-                  <h4 className="product-name">{getProductName(item.productoId)}</h4>
-                  <div className="product-details">
-                    <span className="product-quantity">Cantidad: {item.cantidad}</span>
-                    <span className="product-price">Precio Unitario: S/. {item.precioUnitario.toFixed(2)}</span>
+        {sale.items && sale.items.length > 0 && (
+          <div className="detail-section">
+            <h3 className="section-title">Productos Vendidos</h3>
+            <div className="products-list">
+              {sale.items.map((item, index) => (
+                <div key={index} className="product-item">
+                  <div className="product-info">
+                    <h4 className="product-name">{getProductName(item.productoId)}</h4>
+                    <div className="product-details">
+                      <span className="product-quantity">Cantidad: {item.cantidad}</span>
+                      <span className="product-price">Precio Unitario: S/. {item.precioUnitario.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  <div className="product-total">
+                    <span className="item-total">S/. {(item.cantidad * item.precioUnitario).toFixed(2)}</span>
                   </div>
                 </div>
-                <div className="product-total">
-                  <span className="item-total">S/. {(item.cantidad * item.precioUnitario).toFixed(2)}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Observaciones */}
         {sale.observaciones && (
