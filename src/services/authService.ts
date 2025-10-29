@@ -81,18 +81,20 @@ export interface SaleCreatePayload {
 
 export interface Sale {
   id: string;
-  clienteNombre: string;
-  clienteDocumento: string;
-  clienteEmail: string;
-  clienteTelefono: string;
-  items: SaleItem[];
-  metodoPago: string;
-  observaciones: string;
-  total: number;
   fecha: string;
-  companyId: string;
-  createdAt: string;
-  updatedAt: string;
+  clienteNombre: string;
+  total: number;
+  metodoPago: string;
+  estadoPago: string;
+  companyId: string | null;
+  // Campos opcionales que pueden no estar presentes
+  clienteDocumento?: string;
+  clienteEmail?: string;
+  clienteTelefono?: string;
+  items?: SaleItem[];
+  observaciones?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Servicio de autenticación

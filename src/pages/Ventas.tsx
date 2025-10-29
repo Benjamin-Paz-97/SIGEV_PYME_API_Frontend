@@ -126,7 +126,6 @@ const Ventas: React.FC = () => {
               <div className="sale-header">
                 <div className="sale-info">
                   <h3 className="sale-client">{sale.clienteNombre || 'Cliente sin nombre'}</h3>
-                  <p className="sale-document">{sale.clienteDocumento || 'Sin documento'}</p>
                 </div>
                 <div className="sale-total">
                   <span className="total-amount">S/. {(sale.total || 0).toFixed(2)}</span>
@@ -136,15 +135,11 @@ const Ventas: React.FC = () => {
               <div className="sale-details">
                 <div className="detail-item">
                   <span className="detail-label">Fecha:</span>
-                  <span className="detail-value">{formatDate(sale.fecha || sale.createdAt)}</span>
+                  <span className="detail-value">{formatDate(sale.fecha)}</span>
                 </div>
                 <div className="detail-item">
                   <span className="detail-label">Método de Pago:</span>
                   <span className="detail-value">{getPaymentMethodText(sale.metodoPago)}</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Productos:</span>
-                  <span className="detail-value">{sale.items?.length || 0} item(s)</span>
                 </div>
               </div>
               

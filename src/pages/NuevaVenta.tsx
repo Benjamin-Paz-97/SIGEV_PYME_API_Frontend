@@ -12,6 +12,9 @@ const NuevaVenta: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
+  // Tipo de comprobante
+  const [tipoComprobante, setTipoComprobante] = useState<'boleta' | 'factura'>('boleta');
+
   // Datos del cliente
   const [clienteData, setClienteData] = useState({
     clienteNombre: '',
@@ -56,6 +59,20 @@ const NuevaVenta: React.FC = () => {
 
     loadData();
   }, []);
+
+  const handleTipoComprobanteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newTipo = e.target.value as 'boleta' | 'factura';
+    setTipoComprobante(newTipo);
+    
+    // Limpiar datos del cliente al cambiar tipo
+    setClienteData({
+      clienteNombre: '',
+      clienteDocumento: '',
+      clienteEmail: '',
+      clienteTelefono: '',
+    });
+    setErrors({});
+  };
 
   const handleClienteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -125,11 +142,43 @@ const NuevaVenta: React.FC = () => {
     return saleItems.reduce((total, item) => total + (item.cantidad * item.precioUnitario), 0);
   };
 
+  // Verificar si el total supera 700 soles
+  const totalVenta = calculateTotal();
+  const requiereFactura = totalVenta > 700;
+
+  useEffect(() => {
+    // Si el total supera 700, forzar factura
+    if (requiereFactura && tipoComprobante === 'boleta') {
+      setTipoComprobante('factura');
+      // Limpiar datos del cliente al cambiar tipo
+      setClienteData({
+        clienteNombre: '',
+        clienteDocumento: '',
+        clienteEmail: '',
+        clienteTelefono: '',
+      });
+    }
+  }, [totalVenta, requiereFactura, tipoComprobante]);
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     
-    if (!clienteData.clienteNombre.trim()) newErrors.clienteNombre = 'El nombre del cliente es requerido';
-    if (!clienteData.clienteDocumento.trim()) newErrors.clienteDocumento = 'El documento del cliente es requerido';
+    // Validaciones según el tipo de comprobante
+    if (tipoComprobante === 'boleta') {
+      // Boleta: solo requiere DNI
+      if (!clienteData.clienteDocumento.trim()) {
+        newErrors.clienteDocumento = 'El DNI es requerido';
+      }
+    } else {
+      // Factura: requiere RUC y nombre
+      if (!clienteData.clienteDocumento.trim()) {
+        newErrors.clienteDocumento = 'El RUC es requerido';
+      }
+      if (!clienteData.clienteNombre.trim()) {
+        newErrors.clienteNombre = 'El nombre o razón social es requerido';
+      }
+    }
+    
     if (saleItems.length === 0) newErrors.items = 'Debe agregar al menos un producto';
     
     // Validar formato de email si se proporciona
@@ -150,8 +199,17 @@ const NuevaVenta: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      // Ajustar datos según el tipo de comprobante
+      let finalClienteData = { ...clienteData };
+      
+      if (tipoComprobante === 'boleta') {
+        // Para boleta: el DNI va en clienteDocumento y también en clienteNombre
+        finalClienteData.clienteNombre = clienteData.clienteDocumento;
+      }
+      // Para factura: se mantienen RUC en clienteDocumento y nombre en clienteNombre
+
       const payload: SaleCreatePayload = {
-        ...clienteData,
+        ...finalClienteData,
         items: saleItems,
         metodoPago: saleData.metodoPago,
         observaciones: saleData.observaciones
@@ -185,26 +243,63 @@ const NuevaVenta: React.FC = () => {
           <div className="api-error-message">{apiError}</div>
         )}
 
+        {/* Tipo de Comprobante */}
+        <div className="form-section">
+          <h3 className="section-title">Tipo de Comprobante</h3>
+          {requiereFactura && (
+            <div style={{
+              background: '#fef3c7',
+              border: '1px solid #f59e0b',
+              borderRadius: '8px',
+              padding: '12px',
+              marginBottom: '16px',
+              fontSize: '0.9rem',
+              color: '#92400e'
+            }}>
+              ⚠️ El total supera los S/. 700. Solo se permite emitir factura (requiere RUC).
+            </div>
+          )}
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="tipoComprobante">Comprobante *</label>
+              <select
+                id="tipoComprobante"
+                value={tipoComprobante}
+                onChange={handleTipoComprobanteChange}
+                className="form-input"
+                disabled={requiereFactura}
+              >
+                <option value="boleta" disabled={requiereFactura}>Boleta</option>
+                <option value="factura">Factura</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         {/* Información del Cliente */}
         <div className="form-section">
           <h3 className="section-title">Información del Cliente</h3>
           <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="clienteNombre">Nombre del Cliente *</label>
-              <input
-                type="text"
-                id="clienteNombre"
-                name="clienteNombre"
-                value={clienteData.clienteNombre}
-                onChange={handleClienteChange}
-                className={`form-input ${errors.clienteNombre ? 'error' : ''}`}
-                placeholder="Ej: Juan Pérez"
-              />
-              {errors.clienteNombre && <span className="error-message">{errors.clienteNombre}</span>}
-            </div>
+            {tipoComprobante === 'factura' && (
+              <div className="form-group">
+                <label htmlFor="clienteNombre">Nombre o Razón Social *</label>
+                <input
+                  type="text"
+                  id="clienteNombre"
+                  name="clienteNombre"
+                  value={clienteData.clienteNombre}
+                  onChange={handleClienteChange}
+                  className={`form-input ${errors.clienteNombre ? 'error' : ''}`}
+                  placeholder="Ej: Importadora ABC S.A."
+                />
+                {errors.clienteNombre && <span className="error-message">{errors.clienteNombre}</span>}
+              </div>
+            )}
             
             <div className="form-group">
-              <label htmlFor="clienteDocumento">Documento *</label>
+              <label htmlFor="clienteDocumento">
+                {tipoComprobante === 'boleta' ? 'DNI *' : 'RUC *'}
+              </label>
               <input
                 type="text"
                 id="clienteDocumento"
@@ -212,7 +307,7 @@ const NuevaVenta: React.FC = () => {
                 value={clienteData.clienteDocumento}
                 onChange={handleClienteChange}
                 className={`form-input ${errors.clienteDocumento ? 'error' : ''}`}
-                placeholder="DNI, RUC, etc."
+                placeholder={tipoComprobante === 'boleta' ? 'Ej: 12345678' : 'Ej: 20123456789'}
               />
               {errors.clienteDocumento && <span className="error-message">{errors.clienteDocumento}</span>}
             </div>

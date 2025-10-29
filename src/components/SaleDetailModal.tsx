@@ -97,18 +97,24 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({ sale, isOpen, onClose
                 <span className="info-label">Nombre:</span>
                 <span className="info-value">{sale.clienteNombre || 'N/A'}</span>
               </div>
-              <div className="info-item">
-                <span className="info-label">Documento:</span>
-                <span className="info-value">{sale.clienteDocumento || 'N/A'}</span>
-              </div>
-              <div className="info-item">
-                <span className="info-label">Email:</span>
-                <span className="info-value">{sale.clienteEmail || 'N/A'}</span>
-              </div>
-              <div className="info-item">
-                <span className="info-label">Teléfono:</span>
-                <span className="info-value">{sale.clienteTelefono || 'N/A'}</span>
-              </div>
+              {sale.clienteDocumento && (
+                <div className="info-item">
+                  <span className="info-label">Documento:</span>
+                  <span className="info-value">{sale.clienteDocumento}</span>
+                </div>
+              )}
+              {sale.clienteEmail && (
+                <div className="info-item">
+                  <span className="info-label">Email:</span>
+                  <span className="info-value">{sale.clienteEmail}</span>
+                </div>
+              )}
+              {sale.clienteTelefono && (
+                <div className="info-item">
+                  <span className="info-label">Teléfono:</span>
+                  <span className="info-value">{sale.clienteTelefono}</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -118,7 +124,7 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({ sale, isOpen, onClose
             <div className="sale-info">
               <div className="info-item">
                 <span className="info-label">Fecha:</span>
-                <span className="info-value">{formatDate(sale.fecha || sale.createdAt)}</span>
+                <span className="info-value">{formatDate(sale.fecha)}</span>
               </div>
               <div className="info-item">
                 <span className="info-label">Método de Pago:</span>
@@ -132,29 +138,31 @@ const SaleDetailModal: React.FC<SaleDetailModalProps> = ({ sale, isOpen, onClose
           </div>
 
           {/* Productos Vendidos */}
-          <div className="detail-section">
-            <h3 className="section-title">Productos Vendidos</h3>
-            {isLoading ? (
-              <div className="loading-products">Cargando productos...</div>
-            ) : (
-              <div className="products-list">
-                {sale.items?.map((item, index) => (
-                  <div key={index} className="product-item">
-                    <div className="product-info">
-                      <h4 className="product-name">{getProductName(item.productoId)}</h4>
-                      <div className="product-details">
-                        <span className="product-quantity">Cantidad: {item.cantidad}</span>
-                        <span className="product-price">Precio Unitario: S/. {item.precioUnitario.toFixed(2)}</span>
+          {sale.items && sale.items.length > 0 && (
+            <div className="detail-section">
+              <h3 className="section-title">Productos Vendidos</h3>
+              {isLoading ? (
+                <div className="loading-products">Cargando productos...</div>
+              ) : (
+                <div className="products-list">
+                  {sale.items.map((item, index) => (
+                    <div key={index} className="product-item">
+                      <div className="product-info">
+                        <h4 className="product-name">{getProductName(item.productoId)}</h4>
+                        <div className="product-details">
+                          <span className="product-quantity">Cantidad: {item.cantidad}</span>
+                          <span className="product-price">Precio Unitario: S/. {item.precioUnitario.toFixed(2)}</span>
+                        </div>
+                      </div>
+                      <div className="product-total">
+                        <span className="item-total">S/. {(item.cantidad * item.precioUnitario).toFixed(2)}</span>
                       </div>
                     </div>
-                    <div className="product-total">
-                      <span className="item-total">S/. {(item.cantidad * item.precioUnitario).toFixed(2)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Observaciones */}
           {sale.observaciones && (
